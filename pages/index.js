@@ -1,8 +1,20 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-
+import axios from "axios";
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import { useRef } from "react";
 export default function Home() {
+  const gmailRef = useRef();
+  const passwordRef = useRef();
+  const postUrlRef = useRef();
+  async function handleBot() {
+    const comments = await axios.post("/api/bot", {
+      email: gmailRef.current.value,
+      password: passwordRef.current.value,
+      postUrls: [postUrlRef.current.value],
+    });
+    console.log(comments);
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -12,15 +24,18 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        <input type="text" ref={gmailRef} />
+        <input type="password" ref={passwordRef} />
+        <input type="text" ref={postUrlRef} />
+        <button onClick={handleBot}>Iniciar bots</button>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
         </p>
-
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
             <h2>Documentation &rarr;</h2>
@@ -58,12 +73,12 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
